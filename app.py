@@ -26,6 +26,7 @@ class Book(Me.Document):
             "titulo": self.titulo,
             "texto": self.texto
         }
+Book:Book
 
 @app.route('/api/db_populate', methods=['POST'])
 def db_populate():
@@ -60,7 +61,7 @@ def api_each_book(book_id):
     elif request.method == "PUT":
         content = request.json
         book_obj = Book.objects(book_id=book_id).first()
-        book_obj.update(autor = content['autor'], texto = content['texto'], titulo = content['titulo'])
+        book_obj.update(book_id=content['book_id'],autor = content['autor'],titulo = content['titulo'],texto = content['texto'])
         return make_response(" ", 204)
     elif request.method == "DELETE":
         book_obj = Book.objects(book_id=book_id).first()
