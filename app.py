@@ -28,6 +28,8 @@ class Book(Me.Document):
         }
 Book:Book
 
+#Popular o banco de artigos
+
 @app.route('/api/db_populate', methods=['POST'])
 def db_populate():
     book1 = Book(book_id=1,autor='Afonso S C Junior', titulo='Covid 19 - Pesadelo ou realidade', texto='Será que os brasileiros estão disponíveis a vencer essa guerra?...')
@@ -36,6 +38,7 @@ def db_populate():
     book2.save()
     return make_response("", 201)
     
+#Lista os artigos, e inseri novos
 
 @app.route('/api/books', methods=['GET', 'POST'])
 def api_books():
@@ -49,6 +52,8 @@ def api_books():
         book = Book(book_id=content['book_id'],autor=content['autor'],titulo=content['titulo'],texto=content['texto'])
         book.save()
         return make_response(" ", 201)
+
+#Atualizar, inserir, e deletar artigos
 
 @app.route('/api/books/<book_id>', methods=['GET', 'PUT', 'DELETE'])
 def api_each_book(book_id):
@@ -67,6 +72,32 @@ def api_each_book(book_id):
         book_obj = Book.objects(book_id=book_id).first()
         book_obj.delete()
         return make_response (" ", 204)
+
+#Busca por autor, texto e título
+
+@app.route('/api/find/<autor>', methods=['GET'])
+def api_find_a(autor):
+    book_obj = Book.objects(autor=autor).first()
+    if book_obj:
+        return make_response(jsonify(book_obj.to_json()), 200)
+    else:
+        return make_response (" ", 404)
+
+@app.route('/api/find/<texto>', methods=['GET'])
+def api_find_te(texto):
+    book_obj = Book.objects(texto=texto).first()
+    if book_obj:
+        return make_response(jsonify(book_obj.to_json()), 200)
+    else:
+        return make_response (" ", 404)
+
+@app.route('/api/find/<titulo>', methods=['GET'])
+def api_find_ti(titulo):
+    book_obj = Book.objects(titulo=titulo).first()
+    if book_obj:
+        return make_response(jsonify(book_obj.to_json()), 200)
+    else:
+        return make_response (" ", 404)
 
 if __name__ == '__main__':
     app.run()
